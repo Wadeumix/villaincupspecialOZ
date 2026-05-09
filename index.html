@@ -4,103 +4,266 @@
 <meta charset="UTF-8">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap');
+
   * { margin: 0; padding: 0; box-sizing: border-box; }
+
   body {
     background: transparent;
     font-family: 'Noto Sans JP', sans-serif;
     color: #fff;
-    padding: 12px;
+    padding: 10px;
+    width: 400px;
   }
+
+  .panel {
+    background: linear-gradient(160deg, rgba(2,20,50,0.92) 0%, rgba(4,40,80,0.88) 60%, rgba(0,60,100,0.85) 100%);
+    border: 1px solid rgba(0,180,255,0.3);
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 0 24px rgba(0,140,255,0.15), inset 0 1px 0 rgba(255,255,255,0.07);
+  }
+
+  /* 水面波紋アニメ */
+  .wave-bar {
+    height: 3px;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(0,200,255,0.6) 20%,
+      rgba(0,255,220,0.9) 50%,
+      rgba(0,200,255,0.6) 80%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: wave 2.5s linear infinite;
+  }
+
+  @keyframes wave {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  .race-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px 6px;
+    background: rgba(0,100,180,0.35);
+    border-bottom: 1px solid rgba(0,180,255,0.2);
+  }
+
+  .race-icon {
+    font-size: 16px;
+  }
+
   .race-title {
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 900;
-    letter-spacing: 0.1em;
-    background: rgba(10, 30, 80, 0.85);
-    border-left: 5px solid #00cfff;
-    padding: 6px 12px;
-    margin-bottom: 6px;
+    letter-spacing: 0.12em;
+    color: #e0f8ff;
+    text-shadow: 0 0 10px rgba(0,200,255,0.7);
   }
+
+  .race-badge {
+    margin-left: auto;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: rgba(0,220,255,0.8);
+    border: 1px solid rgba(0,200,255,0.35);
+    border-radius: 3px;
+    padding: 1px 6px;
+  }
+
+  .boats {
+    padding: 5px 0;
+  }
+
   .boat-row {
     display: flex;
     align-items: center;
-    background: rgba(0, 0, 0, 0.72);
-    padding: 5px 10px;
-    margin-bottom: 3px;
-    width: 380px;
-    border-radius: 2px;
+    padding: 5px 10px 5px 0;
+    margin: 2px 8px;
+    border-radius: 3px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: background 0.3s;
+    position: relative;
+    overflow: hidden;
   }
-  .no1 { border-left: 7px solid #ffffff; }
-  .no2 { border-left: 7px solid #111111; }
-  .no3 { border-left: 7px solid #e03030; }
-  .no4 { border-left: 7px solid #1a5aff; }
-  .no5 { border-left: 7px solid #f0d000; }
-  .no6 { border-left: 7px solid #1db954; }
-  .boat-no {
-    width: 26px;
-    text-align: center;
-    font-weight: 900;
-    font-size: 15px;
+
+  /* 水のきらめきライン */
+  .boat-row::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0,200,255,0.2), transparent);
+  }
+
+  /* 艇番カラー帯 */
+  .color-band {
+    width: 5px;
+    align-self: stretch;
     margin-right: 8px;
-    color: #ccc;
+    border-radius: 0 2px 2px 0;
+    flex-shrink: 0;
   }
+  .band-1 { background: #ffffff; }
+  .band-2 { background: #1a1a1a; border: 1px solid rgba(255,255,255,0.3); }
+  .band-3 { background: #e03030; }
+  .band-4 { background: #1a6aff; }
+  .band-5 { background: #f0d000; }
+  .band-6 { background: #1db954; }
+
+  .boat-no {
+    width: 20px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 900;
+    color: rgba(200,240,255,0.7);
+    margin-right: 8px;
+    flex-shrink: 0;
+  }
+
   .boat-name {
     flex-grow: 1;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 700;
+    color: #e8f6ff;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .stat-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-left: 8px;
+    flex-shrink: 0;
+  }
+
+  .stat-label {
+    font-size: 9px;
+    color: rgba(150,210,255,0.6);
     letter-spacing: 0.05em;
   }
-  .odds-label { font-size: 10px; color: #aaa; margin-right: 4px; }
-  .odds {
-    font-size: 16px;
+
+  .stat-value {
+    font-size: 15px;
     font-weight: 900;
-    color: #ffeb3b;
-    min-width: 48px;
+    line-height: 1.1;
+  }
+
+  .odds-value {
+    color: #ffe04a;
+    text-shadow: 0 0 8px rgba(255,210,0,0.5);
+    min-width: 40px;
     text-align: right;
   }
-  .payout-label { font-size: 10px; color: #aaa; margin-left: 10px; margin-right: 4px; }
-  .payout {
+
+  .payout-value {
+    color: #7dd8ff;
+    text-shadow: 0 0 6px rgba(100,200,255,0.4);
+    min-width: 60px;
+    text-align: right;
     font-size: 13px;
-    font-weight: 700;
-    color: #90caf9;
-    min-width: 56px;
-    text-align: right;
   }
+
+  .divider {
+    width: 1px;
+    height: 24px;
+    background: rgba(0,180,255,0.2);
+    margin: 0 8px;
+    flex-shrink: 0;
+  }
+
   .status-msg {
     color: #ff8a80;
-    font-size: 13px;
-    padding: 8px 12px;
-    background: rgba(0,0,0,0.6);
+    font-size: 12px;
+    padding: 10px 12px;
+    text-align: center;
+  }
+
+  /* 更新インジケーター */
+  .footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
+    padding: 4px 10px;
+    border-top: 1px solid rgba(0,180,255,0.1);
+  }
+
+  .dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(0,220,180,0.8);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .footer-text {
+    font-size: 9px;
+    color: rgba(100,200,255,0.4);
+    letter-spacing: 0.08em;
   }
 </style>
 </head>
 <body>
-<div id="display"><div class="status-msg">読み込み中...</div></div>
+<div class="panel">
+  <div class="wave-bar"></div>
+  <div id="display"><div class="status-msg">読み込み中...</div></div>
+  <div class="footer">
+    <div class="dot"></div>
+    <span class="footer-text">LIVE</span>
+  </div>
+</div>
 
 <script>
-  // Cloudflare Workers 中継URL
   const API_URL = "https://misty-paper-840c.v08054028713.workers.dev/";
-
-  // 表示するレース番号（0〜4 で 第1〜5レース）
   const TARGET_RACE_INDEX = 0;
-
-  // 更新間隔（ミリ秒）
   const UPDATE_INTERVAL = 5000;
 
   function renderRace(data) {
     const race = data[TARGET_RACE_INDEX];
     if (!race) throw new Error("レースデータが見つかりません");
-    let html = `<div class="race-title">🚤 ${race.raceName}</div>`;
+
+    let html = `
+      <div class="race-header">
+        <span class="race-icon">🚤</span>
+        <span class="race-title">${race.raceName}</span>
+        <span class="race-badge">ODDS</span>
+      </div>
+      <div class="boats">`;
+
     race.boats.forEach(boat => {
+      const payout = Number(boat.payout);
+      const payoutStr = payout > 0 ? '¥' + payout.toLocaleString() : '---';
       html += `
-        <div class="boat-row no${boat.no}">
+        <div class="boat-row">
+          <div class="color-band band-${boat.no}"></div>
           <span class="boat-no">${boat.no}</span>
           <span class="boat-name">${boat.name}</span>
-          <span class="odds-label">倍率</span>
-          <span class="odds">${boat.odds}</span>
-          <span class="payout-label">払戻</span>
-          <span class="payout">¥${Number(boat.payout).toLocaleString()}</span>
+          <div class="stat-block">
+            <span class="stat-label">倍率</span>
+            <span class="stat-value odds-value">${boat.odds}</span>
+          </div>
+          <div class="divider"></div>
+          <div class="stat-block">
+            <span class="stat-label">払戻</span>
+            <span class="stat-value payout-value">${payoutStr}</span>
+          </div>
         </div>`;
     });
+
+    html += `</div>`;
     document.getElementById("display").innerHTML = html;
   }
 
@@ -121,7 +284,6 @@
       renderRace(data);
     } catch (err) {
       showError("データ取得失敗: " + err.message);
-      console.error("[競艇システム]", err);
     }
   }
 
