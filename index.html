@@ -12,7 +12,7 @@
     font-family: 'Noto Sans JP', sans-serif;
     color: #fff;
     padding: 10px;
-    width: 400px;
+    width: 420px;
   }
 
   .panel {
@@ -23,7 +23,6 @@
     box-shadow: 0 0 24px rgba(0,140,255,0.15), inset 0 1px 0 rgba(255,255,255,0.07);
   }
 
-  /* 水面波紋アニメ */
   .wave-bar {
     height: 3px;
     background: linear-gradient(90deg,
@@ -51,10 +50,6 @@
     border-bottom: 1px solid rgba(0,180,255,0.2);
   }
 
-  .race-icon {
-    font-size: 16px;
-  }
-
   .race-title {
     font-size: 15px;
     font-weight: 900;
@@ -74,9 +69,45 @@
     padding: 1px 6px;
   }
 
-  .boats {
-    padding: 5px 0;
+  /* ローディングアニメ */
+  .loading-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 22px 0 18px;
+    gap: 10px;
   }
+
+  .loading-dots {
+    display: flex;
+    gap: 7px;
+  }
+
+  .loading-dots span {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgba(0,200,255,0.8);
+    animation: dotBounce 1.2s ease-in-out infinite;
+  }
+
+  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes dotBounce {
+    0%, 80%, 100% { transform: scale(0.7); opacity: 0.4; }
+    40%           { transform: scale(1.2); opacity: 1; }
+  }
+
+  .loading-text {
+    font-size: 11px;
+    color: rgba(100,200,255,0.6);
+    letter-spacing: 0.1em;
+  }
+
+  /* ボート行 */
+  .boats { padding: 5px 0; }
 
   .boat-row {
     display: flex;
@@ -86,12 +117,10 @@
     border-radius: 3px;
     background: rgba(255,255,255,0.04);
     border: 1px solid rgba(255,255,255,0.05);
-    transition: background 0.3s;
     position: relative;
     overflow: hidden;
   }
 
-  /* 水のきらめきライン */
   .boat-row::after {
     content: '';
     position: absolute;
@@ -100,7 +129,6 @@
     background: linear-gradient(90deg, transparent, rgba(0,200,255,0.2), transparent);
   }
 
-  /* 艇番カラー帯 */
   .color-band {
     width: 5px;
     align-self: stretch;
@@ -150,11 +178,7 @@
     letter-spacing: 0.05em;
   }
 
-  .stat-value {
-    font-size: 15px;
-    font-weight: 900;
-    line-height: 1.1;
-  }
+  .stat-value { font-size: 15px; font-weight: 900; line-height: 1.1; }
 
   .odds-value {
     color: #ffe04a;
@@ -179,21 +203,70 @@
     flex-shrink: 0;
   }
 
-  .status-msg {
-    color: #ff8a80;
-    font-size: 12px;
-    padding: 10px 12px;
-    text-align: center;
+  /* ナビゲーションボタン */
+  .nav-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 10px;
+    border-top: 1px solid rgba(0,180,255,0.15);
+    background: rgba(0,30,70,0.4);
   }
 
-  /* 更新インジケーター */
+  .nav-btn {
+    background: rgba(0,150,255,0.12);
+    border: 1px solid rgba(0,180,255,0.3);
+    border-radius: 4px;
+    color: rgba(0,220,255,0.9);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: background 0.2s, opacity 0.2s;
+    white-space: nowrap;
+  }
+
+  .nav-btn:hover:not(:disabled) {
+    background: rgba(0,180,255,0.25);
+  }
+
+  .nav-btn:disabled {
+    opacity: 0.25;
+    cursor: default;
+    border-color: rgba(0,180,255,0.1);
+    color: rgba(0,200,255,0.4);
+  }
+
+  .nav-indicator {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+  }
+
+  .nav-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(0,180,255,0.25);
+    border: 1px solid rgba(0,180,255,0.3);
+    transition: background 0.3s;
+  }
+
+  .nav-dot.active {
+    background: rgba(0,220,255,0.9);
+    box-shadow: 0 0 6px rgba(0,200,255,0.7);
+  }
+
+  /* フッター */
   .footer {
     display: flex;
     align-items: center;
     justify-content: flex-end;
     gap: 5px;
-    padding: 4px 10px;
-    border-top: 1px solid rgba(0,180,255,0.1);
+    padding: 3px 10px;
+    border-top: 1px solid rgba(0,180,255,0.08);
   }
 
   .dot {
@@ -206,7 +279,7 @@
 
   @keyframes pulse {
     0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
+    50%       { opacity: 0.3; }
   }
 
   .footer-text {
@@ -219,7 +292,17 @@
 <body>
 <div class="panel">
   <div class="wave-bar"></div>
-  <div id="display"><div class="status-msg">読み込み中...</div></div>
+  <div id="display">
+    <div class="loading-wrap">
+      <div class="loading-dots"><span></span><span></span><span></span></div>
+      <div class="loading-text">LOADING...</div>
+    </div>
+  </div>
+  <div class="nav-bar">
+    <button class="nav-btn" id="btn-prev" onclick="changeRace(-1)">◀◀ 前のレース</button>
+    <div class="nav-indicator" id="nav-dots"></div>
+    <button class="nav-btn" id="btn-next" onclick="changeRace(1)">次のレース ▶▶</button>
+  </div>
   <div class="footer">
     <div class="dot"></div>
     <span class="footer-text">LIVE</span>
@@ -228,16 +311,37 @@
 
 <script>
   const API_URL = "https://misty-paper-840c.v08054028713.workers.dev/";
-  const TARGET_RACE_INDEX = 0;
+  const TOTAL_RACES = 5;
   const UPDATE_INTERVAL = 5000;
 
+  let currentIndex = 0;
+  let cachedData = null;
+  let isLoading = false;
+
+  // ドットインジケーター生成
+  const navDots = document.getElementById("nav-dots");
+  for (let i = 0; i < TOTAL_RACES; i++) {
+    const d = document.createElement("div");
+    d.className = "nav-dot" + (i === 0 ? " active" : "");
+    d.id = "dot-" + i;
+    navDots.appendChild(d);
+  }
+
+  function showLoading() {
+    document.getElementById("display").innerHTML = `
+      <div class="loading-wrap">
+        <div class="loading-dots"><span></span><span></span><span></span></div>
+        <div class="loading-text">LOADING...</div>
+      </div>`;
+  }
+
   function renderRace(data) {
-    const race = data[TARGET_RACE_INDEX];
-    if (!race) throw new Error("レースデータが見つかりません");
+    const race = data[currentIndex];
+    if (!race) return;
 
     let html = `
       <div class="race-header">
-        <span class="race-icon">🚤</span>
+        <span style="font-size:16px">🚤</span>
         <span class="race-title">${race.raceName}</span>
         <span class="race-badge">ODDS</span>
       </div>
@@ -265,25 +369,39 @@
 
     html += `</div>`;
     document.getElementById("display").innerHTML = html;
+    updateNav();
   }
 
-  function showError(msg) {
-    document.getElementById("display").innerHTML =
-      `<div class="status-msg">⚠ ${msg}</div>`;
+  function updateNav() {
+    document.getElementById("btn-prev").disabled = (currentIndex === 0);
+    document.getElementById("btn-next").disabled = (currentIndex === TOTAL_RACES - 1);
+    for (let i = 0; i < TOTAL_RACES; i++) {
+      const d = document.getElementById("dot-" + i);
+      if (d) d.className = "nav-dot" + (i === currentIndex ? " active" : "");
+    }
+  }
+
+  function changeRace(dir) {
+    const next = currentIndex + dir;
+    if (next < 0 || next >= TOTAL_RACES) return;
+    currentIndex = next;
+    if (cachedData) renderRace(cachedData);
+    updateNav();
   }
 
   async function updateDisplay() {
+    if (isLoading) return;
+    isLoading = true;
     try {
-      const res = await fetch(API_URL, {
-        method: "GET",
-        redirect: "follow",
-        cache: "no-store"
-      });
+      const res = await fetch(API_URL, { method: "GET", redirect: "follow", cache: "no-store" });
       if (!res.ok) throw new Error("HTTP " + res.status);
-      const data = await res.json();
-      renderRace(data);
+      cachedData = await res.json();
+      renderRace(cachedData);
     } catch (err) {
-      showError("データ取得失敗: " + err.message);
+      // エラー時はローディングアニメのまま（エラー文字を出さない）
+      if (!cachedData) showLoading();
+    } finally {
+      isLoading = false;
     }
   }
 
