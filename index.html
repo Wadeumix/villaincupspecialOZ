@@ -4,16 +4,13 @@
 <meta charset="UTF-8">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap');
-
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
   body {
     background: transparent;
     font-family: 'Noto Sans JP', sans-serif;
     color: #fff;
     padding: 12px;
   }
-
   .race-title {
     font-size: 18px;
     font-weight: 900;
@@ -22,9 +19,7 @@
     border-left: 5px solid #00cfff;
     padding: 6px 12px;
     margin-bottom: 6px;
-    text-transform: uppercase;
   }
-
   .boat-row {
     display: flex;
     align-items: center;
@@ -33,16 +28,13 @@
     margin-bottom: 3px;
     width: 380px;
     border-radius: 2px;
-    transition: opacity 0.3s;
   }
-
   .no1 { border-left: 7px solid #ffffff; }
   .no2 { border-left: 7px solid #111111; }
   .no3 { border-left: 7px solid #e03030; }
   .no4 { border-left: 7px solid #1a5aff; }
   .no5 { border-left: 7px solid #f0d000; }
   .no6 { border-left: 7px solid #1db954; }
-
   .boat-no {
     width: 26px;
     text-align: center;
@@ -51,20 +43,13 @@
     margin-right: 8px;
     color: #ccc;
   }
-
   .boat-name {
     flex-grow: 1;
     font-size: 15px;
     font-weight: 700;
     letter-spacing: 0.05em;
   }
-
-  .odds-label {
-    font-size: 10px;
-    color: #aaa;
-    margin-right: 4px;
-  }
-
+  .odds-label { font-size: 10px; color: #aaa; margin-right: 4px; }
   .odds {
     font-size: 16px;
     font-weight: 900;
@@ -72,14 +57,7 @@
     min-width: 48px;
     text-align: right;
   }
-
-  .payout-label {
-    font-size: 10px;
-    color: #aaa;
-    margin-left: 10px;
-    margin-right: 4px;
-  }
-
+  .payout-label { font-size: 10px; color: #aaa; margin-left: 10px; margin-right: 4px; }
   .payout {
     font-size: 13px;
     font-weight: 700;
@@ -87,7 +65,6 @@
     min-width: 56px;
     text-align: right;
   }
-
   .status-msg {
     color: #ff8a80;
     font-size: 13px;
@@ -101,46 +78,109 @@
 
 <script>
   const API_URL = "https://script.google.com/macros/s/AKfycbxb-dA8KYm2yeaGSnlJRu-bDBq2ZfRU3ApBskwzRdmlUR4hO4vGWciwgj2ztX-7gCUqRg/exec";
-
-  // 表示するレース番号（0〜4 で 第1〜5レース）
   const TARGET_RACE_INDEX = 0;
-
-  // 更新間隔（ミリ秒）
   const UPDATE_INTERVAL = 5000;
 
-  function updateDisplay() {
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", API_URL, true);
-    xhr.onload = function () {
-      try {
-        if (xhr.status !== 200) throw new Error("HTTPエラー: " + xhr.status);
-        const data = JSON.parse(xhr.responseText);
-        const race = data[TARGET_RACE_INDEX];
-        if (!race) throw new Error("レースデータが見つかりません");
+  function renderRace(data) {
+    const race = data[TARGET_RACE_INDEX];
+    if (!race) throw new Error("レースデータが見つかりません");
+    let html = `<div class="race-title">🚤 ${race.raceName}</div>`;
+    race.boats.forEach(boat => {
+      html += `
+        <div class="boat-row no${boat.no}">
+          <span class="boat-no">${boat.no}</span>
+          <span class="boat-name">${boat.name}</span>
+          <span class="odds-label">倍率</span>
+          <span class="odds">${boat.odds}</span>
+          <span class="payout-label">払戻</span>
+          <span class="payout">¥${Number(boat.payout).toLocaleString()}</span>
+        </div>`;
+    });
+    document.getElementById("display").innerHTML = html;
+  }
 
-        let html = `<div class="race-title">🚤 ${race.raceName}</div>`;
-        race.boats.forEach(boat => {
-          html += `
-            <div class="boat-row no${boat.no}">
-              <span class="boat-no">${boat.no}</span>
-              <span class="boat-name">${boat.name}</span>
-              <span class="odds-label">倍率</span>
-              <span class="odds">${boat.odds}</span>
-              <span class="payout-label">払戻</span>
-              <span class="payout">¥${Number(boat.payout).toLocaleString()}</span>
-            </div>`;
-        });
-        document.getElementById("display").innerHTML = html;
-      } catch (err) {
-        document.getElementById("display").innerHTML =
-          `<div class="status-msg">⚠ パースエラー: ${err.message}</div>`;
+  function showError(msg) {
+    document.getElementById("display").innerHTML =
+      `<div class="status-msg">⚠ ${msg}</div>`;
+  }
+
+  // ── 方法①: fetch (redirect: follow) ──────────────────
+  async function tryFetch() {
+    const res = await fetch(API_URL, {
+      method: "GET",
+      redirect: "follow",
+      cache: "no-store"
+    });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const data = await res.json();
+    renderRace(data);
+  }
+
+  // ── 方法②: XHR ───────────────────────────────────────
+  function tryXHR() {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open("GET", API_URL, true);
+      xhr.withCredentials = false;
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          try {
+            const data = JSON.parse(xhr.responseText);
+            renderRace(data);
+            resolve();
+          } catch (e) { reject(e); }
+        } else {
+          reject(new Error("XHR HTTP " + xhr.status));
+        }
+      };
+      xhr.onerror = () => reject(new Error("XHR network error"));
+      xhr.send();
+    });
+  }
+
+  // ── 方法③: JSONPフォールバック ────────────────────────
+  function tryJSONP() {
+    return new Promise((resolve, reject) => {
+      const cbName = "_cb" + Date.now();
+      const script = document.createElement("script");
+      const timer = setTimeout(() => {
+        delete window[cbName];
+        script.remove();
+        reject(new Error("JSONP timeout"));
+      }, 8000);
+
+      window[cbName] = function (data) {
+        clearTimeout(timer);
+        delete window[cbName];
+        script.remove();
+        try { renderRace(data); resolve(); }
+        catch (e) { reject(e); }
+      };
+
+      script.src = API_URL + "?callback=" + cbName;
+      script.onerror = () => {
+        clearTimeout(timer);
+        reject(new Error("JSONP script error"));
+      };
+      document.head.appendChild(script);
+    });
+  }
+
+  // ── 順番に試してどれかが通ったら成功 ────────────────────
+  async function updateDisplay() {
+    try {
+      await tryFetch();
+    } catch (e1) {
+      try {
+        await tryXHR();
+      } catch (e2) {
+        try {
+          await tryJSONP();
+        } catch (e3) {
+          showError(`全通信方式失敗 fetch:${e1.message} / xhr:${e2.message} / jsonp:${e3.message}`);
+        }
       }
-    };
-    xhr.onerror = function () {
-      document.getElementById("display").innerHTML =
-        `<div class="status-msg">⚠ 通信エラー（XHR失敗）</div>`;
-    };
-    xhr.send();
+    }
   }
 
   updateDisplay();
