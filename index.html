@@ -77,7 +77,7 @@
 <div id="display"><div class="status-msg">読み込み中...</div></div>
 
 <script>
-  const API_URL = "https://script.google.com/macros/s/AKfycbxb-dA8KYm2yeaGSnlJRu-bDBq2ZfRU3ApBskwzRdmlUR4hO4vGWciwgj2ztX-7gCUqRg/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbx__Ipfk3D4spW6l7E_sPPBJd_Olx_RGOfjrpYqpazDfmp0wNxM_uxSnttdoepjizuraA/exec";
   const TARGET_RACE_INDEX = 0;
   const UPDATE_INTERVAL = 5000;
 
@@ -104,7 +104,7 @@
       `<div class="status-msg">⚠ ${msg}</div>`;
   }
 
-  // ── 方法①: fetch (redirect: follow) ──────────────────
+  // ── 方法①: fetch ─────────────────────────────────────
   async function tryFetch() {
     const res = await fetch(API_URL, {
       method: "GET",
@@ -138,7 +138,7 @@
     });
   }
 
-  // ── 方法③: JSONPフォールバック ────────────────────────
+  // ── 方法③: JSONP ─────────────────────────────────────
   function tryJSONP() {
     return new Promise((resolve, reject) => {
       const cbName = "_cb" + Date.now();
@@ -166,7 +166,7 @@
     });
   }
 
-  // ── 順番に試してどれかが通ったら成功 ────────────────────
+  // ── 順番に試す ────────────────────────────────────────
   async function updateDisplay() {
     try {
       await tryFetch();
