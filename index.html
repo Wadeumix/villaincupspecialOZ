@@ -78,6 +78,15 @@
     gap: 10px;
   }
 
+  .private-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 258px;
+    gap: 10px;
+  }
+
   .loading-dots {
     display: flex;
     gap: 7px;
@@ -343,7 +352,7 @@
 
     if (!race.isPublic) {
       html += `
-        <div class="loading-wrap">
+        <div class="private-wrap">
           <div class="loading-dots"><span></span><span></span><span></span></div>
           <div class="loading-text">集計中のため非公開</div>
         </div>`;
