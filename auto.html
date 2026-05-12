@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: transparent;
+    font-family: 'Noto Sans JP', sans-serif;
+    color: #fff;
+    padding: 16px;
+    width: 700px;
+  }
+
+  .panel {
+    background: linear-gradient(160deg, rgba(2,20,50,0.92) 0%, rgba(4,40,80,0.88) 60%, rgba(0,60,100,0.85) 100%);
+    border: 2px solid rgba(0,180,255,0.3);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 40px rgba(0,140,255,0.15), inset 0 1px 0 rgba(255,255,255,0.07);
+  }
+
+  /* 波アニメバー */
+  .wave-bar {
+    height: 5px;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(0,200,255,0.6) 20%,
+      rgba(0,255,220,0.9) 50%,
+      rgba(0,200,255,0.6) 80%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: wave 2.5s linear infinite;
+  }
+  @keyframes wave {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* レースヘッダー */
+  .race-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px 10px;
+    background: rgba(0,100,180,0.35);
+    border-bottom: 1px solid rgba(0,180,255,0.2);
+  }
+  .race-title {
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    color: #e0f8ff;
+    text-shadow: 0 0 16px rgba(0,200,255,0.7);
+  }
+  .race-badge {
+    margin-left: auto;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: rgba(0,220,255,0.8);
+    border: 1px solid rgba(0,200,255,0.35);
+    border-radius: 4px;
+    padding: 2px 10px;
+  }
+
+  /* コンテンツエリア（アニメーション用） */
+  #display {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .race-content {
+    width: 100%;
+  }
+  .race-content.slide-in-right {
+    animation: slideInRight 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  }
+  .race-content.slide-out-left {
+    animation: slideOutLeft 0.5s cubic-bezier(0.55, 0.055, 0.675, 0.19) forwards;
+    position: absolute;
+    top: 0; left: 0;
+  }
+
+  @keyframes slideInRight {
+    from { transform: translateX(60px); opacity: 0; }
+    to   { transform: translateX(0);    opacity: 1; }
+  }
+  @keyframes slideOutLeft {
+    from { transform: translateX(0);    opacity: 1; }
+    to   { transform: translateX(-60px); opacity: 0; }
+  }
+
+  /* ローディング */
+  .loading-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 36px 0 30px;
+    gap: 16px;
+  }
+  .private-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 430px;
+    gap: 16px;
+  }
+  .loading-dots { display: flex; gap: 11px; }
+  .loading-dots span {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: rgba(0,200,255,0.8);
+    animation: dotBounce 1.2s ease-in-out infinite;
+  }
+  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes dotBounce {
+    0%, 80%, 100% { transform: scale(0.7); opacity: 0.4; }
+    40%           { transform: scale(1.2); opacity: 1; }
+  }
+  .loading-text {
+    font-size: 18px;
+    color: rgba(100,200,255,0.6);
+    letter-spacing: 0.1em;
+  }
+
+  /* ボート行 */
+  .boats { padding: 8px 0; }
+  .boat-row {
+    display: flex;
+    align-items: center;
+    padding: 8px 17px 8px 0;
+    margin: 3px 13px;
+    border-radius: 5px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.05);
+    position: relative;
+    overflow: hidden;
+  }
+  .boat-row::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0,200,255,0.2), transparent);
+  }
+  .color-band {
+    width: 8px;
+    align-self: stretch;
+    margin-right: 14px;
+    border-radius: 0 3px 3px 0;
+    flex-shrink: 0;
+  }
+  .band-1 { background: #ffffff; }
+  .band-2 { background: #1a1a1a; border: 1px solid rgba(255,255,255,0.3); }
+  .band-3 { background: #e03030; }
+  .band-4 { background: #1a6aff; }
+  .band-5 { background: #f0d000; }
+  .band-6 { background: #1db954; }
+
+  .boat-no {
+    width: 34px;
+    text-align: center;
+    font-size: 22px;
+    font-weight: 900;
+    color: rgba(200,240,255,0.7);
+    margin-right: 13px;
+    flex-shrink: 0;
+  }
+  .boat-name {
+    flex-grow: 1;
+    font-size: 22px;
+    font-weight: 700;
+    color: #e8f6ff;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .stat-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-left: 13px;
+    flex-shrink: 0;
+  }
+  .stat-label {
+    font-size: 14px;
+    color: rgba(150,210,255,0.6);
+    letter-spacing: 0.05em;
+  }
+  .stat-value { font-size: 26px; font-weight: 900; line-height: 1.1; }
+  .odds-value {
+    color: #ffe04a;
+    text-shadow: 0 0 12px rgba(255,210,0,0.5);
+    min-width: 66px;
+    text-align: right;
+  }
+  .payout-value {
+    color: #7dd8ff;
+    text-shadow: 0 0 10px rgba(100,200,255,0.4);
+    min-width: 100px;
+    text-align: right;
+    font-size: 22px;
+  }
+  .divider {
+    width: 1px; height: 40px;
+    background: rgba(0,180,255,0.2);
+    margin: 0 13px;
+    flex-shrink: 0;
+  }
+
+  /* フッター */
+  .footer {
+    border-top: 1px solid rgba(0,180,255,0.08);
+  }
+
+  /* ドットインジケーター＋LIVE */
+  .footer-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 17px;
+  }
+  .nav-indicator { display: flex; gap: 8px; align-items: center; }
+  .nav-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(0,180,255,0.25);
+    border: 1px solid rgba(0,180,255,0.3);
+    transition: background 0.4s, box-shadow 0.4s;
+  }
+  .nav-dot.active {
+    background: rgba(0,220,255,0.9);
+    box-shadow: 0 0 8px rgba(0,200,255,0.8);
+  }
+  .live-wrap { display: flex; align-items: center; gap: 8px; }
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(0,220,180,0.8);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.3; }
+  }
+  .footer-text {
+    font-size: 15px;
+    color: rgba(100,200,255,0.4);
+    letter-spacing: 0.08em;
+  }
+
+  /* カウントダウンバー */
+  .countdown-bar-wrap {
+    height: 3px;
+    background: rgba(0,180,255,0.1);
+    overflow: hidden;
+  }
+  .countdown-bar {
+    height: 100%;
+    background: linear-gradient(90deg, rgba(0,200,255,0.4), rgba(0,255,220,0.9));
+    width: 100%;
+    transform-origin: left center;
+    transition: none;
+  }
+  .countdown-bar.running {
+    animation: countdown var(--duration) linear forwards;
+  }
+  @keyframes countdown {
+    from { transform: scaleX(1); }
+    to   { transform: scaleX(0); }
+  }
+</style>
+</head>
+<body>
+<div class="panel">
+  <div class="wave-bar"></div>
+  <div id="display">
+    <div class="loading-wrap">
+      <div class="loading-dots"><span></span><span></span><span></span></div>
+      <div class="loading-text">LOADING...</div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="footer-bar">
+      <div class="nav-indicator" id="nav-dots"></div>
+      <div class="live-wrap">
+        <div class="dot"></div>
+        <span class="footer-text">LIVE</span>
+      </div>
+    </div>
+    <div class="countdown-bar-wrap">
+      <div class="countdown-bar" id="countdown-bar"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const API_URL      = "https://misty-paper-840c.v08054028713.workers.dev/";
+  const TOTAL_RACES  = 5;
+  const RACE_DURATION = 15000; // 15秒
+  const UPDATE_INTERVAL = 5000;
+  const ANIM_DURATION = 500;
+
+  let currentIndex = 0;
+  let cachedData   = null;
+  let isLoading    = false;
+  let isAnimating  = false;
+  let raceTimer    = null;
+  let countdownBar = document.getElementById("countdown-bar");
+
+  // ドット生成
+  const navDots = document.getElementById("nav-dots");
+  for (let i = 0; i < TOTAL_RACES; i++) {
+    const d = document.createElement("div");
+    d.className = "nav-dot" + (i === 0 ? " active" : "");
+    d.id = "dot-" + i;
+    navDots.appendChild(d);
+  }
+
+  function updateDots() {
+    for (let i = 0; i < TOTAL_RACES; i++) {
+      const d = document.getElementById("dot-" + i);
+      if (d) d.className = "nav-dot" + (i === currentIndex ? " active" : "");
+    }
+  }
+
+  function startCountdown() {
+    // バーをリセット
+    countdownBar.classList.remove("running");
+    countdownBar.style.setProperty("--duration", RACE_DURATION + "ms");
+    // 再フロー強制
+    void countdownBar.offsetWidth;
+    countdownBar.classList.add("running");
+  }
+
+  function buildContent(race) {
+    let html = `
+      <div class="race-header">
+        <span style="font-size:26px">🚤</span>
+        <span class="race-title">${race.raceName}</span>
+        <span class="race-badge">ODDS</span>
+      </div>`;
+
+    if (!race.isPublic) {
+      html += `
+        <div class="private-wrap">
+          <div class="loading-dots"><span></span><span></span><span></span></div>
+          <div class="loading-text">集計中のため非公開</div>
+        </div>`;
+    } else {
+      html += `<div class="boats">`;
+      race.boats.forEach(boat => {
+        const payout = Number(boat.payout);
+        const payoutStr = payout > 0 ? "¥" + payout.toLocaleString() : "---";
+        html += `
+          <div class="boat-row">
+            <div class="color-band band-${boat.no}"></div>
+            <span class="boat-no">${boat.no}</span>
+            <span class="boat-name">${boat.name}</span>
+            <div class="stat-block">
+              <span class="stat-label">倍率</span>
+              <span class="stat-value odds-value">${boat.odds}</span>
+            </div>
+            <div class="divider"></div>
+            <div class="stat-block">
+              <span class="stat-label">払戻</span>
+              <span class="stat-value payout-value">${payoutStr}</span>
+            </div>
+          </div>`;
+      });
+      html += `</div>`;
+    }
+    return html;
+  }
+
+  function renderRace(data, animate) {
+    if (!data) return;
+    const race = data[currentIndex];
+    if (!race) return;
+
+    const display = document.getElementById("display");
+
+    if (!animate) {
+      const div = document.createElement("div");
+      div.className = "race-content";
+      div.innerHTML = buildContent(race);
+      display.innerHTML = "";
+      display.appendChild(div);
+      updateDots();
+      return;
+    }
+
+    if (isAnimating) return;
+    isAnimating = true;
+
+    // 旧コンテンツをスライドアウト
+    const old = display.querySelector(".race-content");
+    if (old) {
+      old.classList.add("slide-out-left");
+    }
+
+    // 新コンテンツを準備
+    const newDiv = document.createElement("div");
+    newDiv.className = "race-content slide-in-right";
+    newDiv.innerHTML = buildContent(race);
+    display.appendChild(newDiv);
+    updateDots();
+
+    setTimeout(() => {
+      if (old) old.remove();
+      newDiv.classList.remove("slide-in-right");
+      isAnimating = false;
+    }, ANIM_DURATION);
+  }
+
+  function nextRace() {
+    currentIndex = (currentIndex + 1) % TOTAL_RACES;
+    renderRace(cachedData, true);
+    startCountdown();
+  }
+
+  function startRaceTimer() {
+    if (raceTimer) clearInterval(raceTimer);
+    raceTimer = setInterval(nextRace, RACE_DURATION);
+    startCountdown();
+  }
+
+  async function updateDisplay() {
+    if (isLoading) return;
+    isLoading = true;
+    try {
+      const res = await fetch(API_URL, { method: "GET", redirect: "follow", cache: "no-store" });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const data = await res.json();
+      const firstLoad = !cachedData;
+      cachedData = data;
+      renderRace(cachedData, false);
+      if (firstLoad) startRaceTimer();
+    } catch (err) {
+      if (!cachedData) {
+        document.getElementById("display").innerHTML = `
+          <div class="loading-wrap">
+            <div class="loading-dots"><span></span><span></span><span></span></div>
+            <div class="loading-text">LOADING...</div>
+          </div>`;
+      }
+    } finally {
+      isLoading = false;
+    }
+  }
+
+  updateDisplay();
+  setInterval(updateDisplay, UPDATE_INTERVAL);
+</script>
+</body>
+</html>
