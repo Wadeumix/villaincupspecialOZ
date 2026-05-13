@@ -213,7 +213,7 @@
   .footer {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: space-between;
     gap: 8px;
     padding: 5px 17px;
     border-top: 1px solid rgba(0,180,255,0.08);
@@ -237,6 +237,13 @@
     color: rgba(100,200,255,0.4);
     letter-spacing: 0.08em;
   }
+  .credit { display: flex; align-items: center; gap: 2px; opacity: 0.45; }
+  .credit-pre { font-size: 7px; color: rgba(210,230,245,0.9); letter-spacing: 0.04em; margin-right: 2px; }
+  .credit-3   { font-size: 13px; font-weight: 900; color: #d8eaf8; line-height: 1; letter-spacing: 0; }
+  .credit-no1 { font-size: 13px; font-weight: 900; color: #35c26a; line-height: 1; letter-spacing: 0; }
+  .credit-top { font-size: 7px; font-weight: 700; background: #35c26a; color: #fff; padding: 0 3px 1px; border-radius: 2px; margin-left: 2px; vertical-align: 2px; letter-spacing: 0.05em; }
+  .credit-sep { color: rgba(150,200,230,0.3); font-size: 9px; margin: 0 3px; }
+  .credit-tone { font-size: 8px; font-weight: 700; color: rgba(210,230,245,0.85); letter-spacing: 0.07em; }
 </style>
 </head>
 <body>
@@ -249,8 +256,16 @@
     </div>
   </div>
   <div class="footer">
-    <div class="dot"></div>
-    <span class="footer-text">LIVE</span>
+    <div class="credit">
+      <span class="credit-pre">powered by</span>
+      <span class="credit-3">3</span><span class="credit-no1">NO1</span><span class="credit-top">TOP</span>
+      <span class="credit-sep">·</span>
+      <span class="credit-tone">TONE GROUP</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div class="dot"></div>
+      <span class="footer-text">LIVE</span>
+    </div>
   </div>
 </div>
 
