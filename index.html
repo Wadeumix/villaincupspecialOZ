@@ -2,29 +2,39 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VILLAIN CUP SPECIAL</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap');
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    background: transparent;
+    background: linear-gradient(160deg, #010d25 0%, #021428 60%, #001e30 100%);
     font-family: 'Noto Sans JP', sans-serif;
     color: #fff;
-    padding: 10px;
-    width: 420px;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .container {
+    max-width: 560px;
+    width: 100%;
   }
 
   .panel {
-    background: linear-gradient(160deg, rgba(2,20,50,0.92) 0%, rgba(4,40,80,0.88) 60%, rgba(0,60,100,0.85) 100%);
-    border: 1px solid rgba(0,180,255,0.3);
-    border-radius: 6px;
+    background: linear-gradient(160deg, rgba(2,20,50,0.95) 0%, rgba(4,40,80,0.92) 60%, rgba(0,60,100,0.88) 100%);
+    border: 2px solid rgba(0,180,255,0.3);
+    border-radius: 14px;
     overflow: hidden;
-    box-shadow: 0 0 24px rgba(0,140,255,0.15), inset 0 1px 0 rgba(255,255,255,0.07);
+    box-shadow: 0 0 60px rgba(0,140,255,0.15), inset 0 1px 0 rgba(255,255,255,0.07);
   }
 
   .wave-bar {
-    height: 3px;
+    height: 5px;
     background: linear-gradient(90deg,
       transparent 0%,
       rgba(0,200,255,0.6) 20%,
@@ -35,404 +45,172 @@
     background-size: 200% 100%;
     animation: wave 2.5s linear infinite;
   }
-
   @keyframes wave {
     0%   { background-position: 200% 0; }
     100% { background-position: -200% 0; }
   }
 
-  .race-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 7px 12px 6px;
-    background: rgba(0,100,180,0.35);
-    border-bottom: 1px solid rgba(0,180,255,0.2);
-  }
-
-  .race-title {
-    font-size: 15px;
-    font-weight: 900;
-    letter-spacing: 0.12em;
-    color: #e0f8ff;
-    text-shadow: 0 0 10px rgba(0,200,255,0.7);
-  }
-
-  .race-badge {
-    margin-left: auto;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    color: rgba(0,220,255,0.8);
-    border: 1px solid rgba(0,200,255,0.35);
-    border-radius: 3px;
-    padding: 1px 6px;
-  }
-
-  .loading-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 22px 0 18px;
-    gap: 10px;
-  }
-
-  .private-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 258px;
-    gap: 10px;
-  }
-
-  .loading-dots {
-    display: flex;
-    gap: 7px;
-  }
-
-  .loading-dots span {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: rgba(0,200,255,0.8);
-    animation: dotBounce 1.2s ease-in-out infinite;
-  }
-
-  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
-  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
-
-  @keyframes dotBounce {
-    0%, 80%, 100% { transform: scale(0.7); opacity: 0.4; }
-    40%           { transform: scale(1.2); opacity: 1; }
-  }
-
-  .loading-text {
-    font-size: 11px;
-    color: rgba(100,200,255,0.6);
-    letter-spacing: 0.1em;
-  }
-
-  .boats { padding: 5px 0; }
-
-  .boat-row {
-    display: flex;
-    align-items: center;
-    padding: 5px 10px 5px 0;
-    margin: 2px 8px;
-    border-radius: 3px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.05);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .boat-row::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(0,200,255,0.2), transparent);
-  }
-
-  .color-band {
-    width: 5px;
-    align-self: stretch;
-    margin-right: 8px;
-    border-radius: 0 2px 2px 0;
-    flex-shrink: 0;
-  }
-  .band-1 { background: #ffffff; }
-  .band-2 { background: #1a1a1a; border: 1px solid rgba(255,255,255,0.3); }
-  .band-3 { background: #e03030; }
-  .band-4 { background: #1a6aff; }
-  .band-5 { background: #f0d000; }
-  .band-6 { background: #1db954; }
-
-  .boat-no {
-    width: 20px;
+  .header {
+    padding: 28px 32px 22px;
+    background: rgba(0,100,180,0.25);
+    border-bottom: 1px solid rgba(0,180,255,0.15);
     text-align: center;
-    font-size: 13px;
-    font-weight: 900;
-    color: rgba(200,240,255,0.7);
-    margin-right: 8px;
-    flex-shrink: 0;
   }
 
-  .boat-name {
-    flex-grow: 1;
-    font-size: 14px;
+  .event-label {
+    font-size: 11px;
     font-weight: 700;
-    color: #e8f6ff;
-    letter-spacing: 0.03em;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    letter-spacing: 0.2em;
+    color: rgba(0,220,255,0.6);
+    margin-bottom: 10px;
   }
 
-  .stat-block {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    margin-left: 8px;
-    flex-shrink: 0;
+  .event-title {
+    font-size: 32px;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    color: #e0f8ff;
+    text-shadow: 0 0 24px rgba(0,200,255,0.5);
+    line-height: 1.2;
   }
 
-  .stat-label {
-    font-size: 9px;
-    color: rgba(150,210,255,0.6);
-    letter-spacing: 0.05em;
+  .event-title span {
+    color: #35c26a;
+    text-shadow: 0 0 20px rgba(53,194,106,0.5);
   }
 
-  .stat-value { font-size: 15px; font-weight: 900; line-height: 1.1; }
-
-  .odds-value {
-    color: #ffe04a;
-    text-shadow: 0 0 8px rgba(255,210,0,0.5);
-    min-width: 40px;
-    text-align: right;
+  .ended-badge {
+    display: inline-block;
+    margin-top: 14px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: rgba(200,230,255,0.5);
+    border: 1px solid rgba(0,180,255,0.2);
+    border-radius: 20px;
+    padding: 4px 16px;
   }
 
-  .payout-value {
-    color: #7dd8ff;
-    text-shadow: 0 0 6px rgba(100,200,255,0.4);
-    min-width: 60px;
-    text-align: right;
-    font-size: 13px;
+  .body {
+    padding: 28px 32px;
+  }
+
+  .thanks-text {
+    font-size: 15px;
+    line-height: 1.9;
+    color: rgba(200,230,255,0.75);
+    text-align: center;
+    margin-bottom: 28px;
   }
 
   .divider {
-    width: 1px;
-    height: 24px;
-    background: rgba(0,180,255,0.2);
-    margin: 0 8px;
-    flex-shrink: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0,180,255,0.25), transparent);
+    margin-bottom: 28px;
   }
 
-  .nav-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 6px 10px;
-    border-top: 1px solid rgba(0,180,255,0.15);
-    background: rgba(0,30,70,0.4);
-  }
-
-  .nav-btn {
-    background: rgba(0,150,255,0.12);
-    border: 1px solid rgba(0,180,255,0.3);
-    border-radius: 4px;
-    color: rgba(0,220,255,0.9);
-    font-family: 'Noto Sans JP', sans-serif;
+  .survey-label {
     font-size: 11px;
     font-weight: 700;
-    letter-spacing: 0.05em;
-    padding: 4px 10px;
+    letter-spacing: 0.18em;
+    color: rgba(0,220,255,0.5);
+    text-align: center;
+    margin-bottom: 14px;
+  }
+
+  .survey-desc {
+    font-size: 13px;
+    color: rgba(180,215,255,0.65);
+    text-align: center;
+    line-height: 1.7;
+    margin-bottom: 22px;
+  }
+
+  .survey-btn {
+    display: block;
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, rgba(53,194,106,0.18) 0%, rgba(0,180,255,0.15) 100%);
+    border: 1.5px solid rgba(53,194,106,0.5);
+    border-radius: 8px;
+    color: #5de88a;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-align: center;
+    text-decoration: none;
     cursor: pointer;
-    transition: background 0.2s, opacity 0.2s;
-    white-space: nowrap;
+    transition: background 0.25s, box-shadow 0.25s, transform 0.15s;
+    box-shadow: 0 0 20px rgba(53,194,106,0.1);
   }
 
-  .nav-btn:hover:not(:disabled) {
-    background: rgba(0,180,255,0.25);
+  .survey-btn:hover {
+    background: linear-gradient(135deg, rgba(53,194,106,0.32) 0%, rgba(0,180,255,0.25) 100%);
+    box-shadow: 0 0 30px rgba(53,194,106,0.25);
+    transform: translateY(-1px);
   }
 
-  .nav-btn:disabled {
-    opacity: 0.25;
-    cursor: default;
-    border-color: rgba(0,180,255,0.1);
-    color: rgba(0,200,255,0.4);
-  }
-
-  .nav-indicator {
-    display: flex;
-    gap: 5px;
-    align-items: center;
-  }
-
-  .nav-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: rgba(0,180,255,0.25);
-    border: 1px solid rgba(0,180,255,0.3);
-    transition: background 0.3s;
-  }
-
-  .nav-dot.active {
-    background: rgba(0,220,255,0.9);
-    box-shadow: 0 0 6px rgba(0,200,255,0.7);
+  .survey-btn:active {
+    transform: translateY(0);
   }
 
   .footer {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 5px;
-    padding: 3px 10px;
+    padding: 10px 20px;
     border-top: 1px solid rgba(0,180,255,0.08);
   }
 
+  .credit { display: flex; align-items: center; gap: 2px; opacity: 0.4; }
+  .credit-pre { font-size: 7px; color: rgba(210,230,245,0.9); letter-spacing: 0.04em; margin-right: 2px; }
+  .credit-3   { font-size: 13px; font-weight: 900; color: #d8eaf8; line-height: 1; letter-spacing: 0; }
+  .credit-no1 { font-size: 13px; font-weight: 900; color: #35c26a; line-height: 1; letter-spacing: 0; }
+  .credit-sep { color: rgba(150,200,230,0.3); font-size: 9px; margin: 0 3px; }
+  .credit-tone { font-size: 8px; font-weight: 700; color: rgba(210,230,245,0.85); letter-spacing: 0.07em; }
+
   .dot {
-    width: 5px;
-    height: 5px;
+    width: 7px; height: 7px;
     border-radius: 50%;
-    background: rgba(0,220,180,0.8);
-    animation: pulse 2s ease-in-out infinite;
+    background: rgba(100,180,255,0.3);
   }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50%       { opacity: 0.3; }
-  }
-
-  .footer-text {
-    font-size: 9px;
-    color: rgba(100,200,255,0.4);
-    letter-spacing: 0.08em;
-  }
-  .credit { display: flex; align-items: center; gap: 2px; opacity: 0.45; }
-  .credit-pre { font-size: 6px; color: rgba(210,230,245,0.9); letter-spacing: 0.04em; margin-right: 1px; }
-  .credit-3   { font-size: 11px; font-weight: 900; color: #d8eaf8; line-height: 1; letter-spacing: 0; }
-  .credit-no1 { font-size: 11px; font-weight: 900; color: #35c26a; line-height: 1; letter-spacing: 0; }
-  .credit-top { font-size: 6px; font-weight: 700; background: #35c26a; color: #fff; padding: 0 2px 1px; border-radius: 2px; margin-left: 2px; vertical-align: 2px; letter-spacing: 0.05em; }
-  .credit-sep { color: rgba(150,200,230,0.3); font-size: 8px; margin: 0 2px; }
-  .credit-tone { font-size: 7px; font-weight: 700; color: rgba(210,230,245,0.85); letter-spacing: 0.07em; }
 </style>
 </head>
 <body>
-<div class="panel">
-  <div class="wave-bar"></div>
-  <div id="display">
-    <div class="loading-wrap">
-      <div class="loading-dots"><span></span><span></span><span></span></div>
-      <div class="loading-text">LOADING...</div>
+<div class="container">
+  <div class="panel">
+    <div class="wave-bar"></div>
+    <div class="header">
+      <div class="event-label">EVENT FINISHED</div>
+      <div class="event-title">VILLAIN CUP<br><span>SPECIAL</span></div>
+      <div class="ended-badge">放送終了</div>
     </div>
-  </div>
-  <div class="nav-bar">
-    <button class="nav-btn" id="btn-prev" onclick="changeRace(-1)">◀◀ 前のレース</button>
-    <div class="nav-indicator" id="nav-dots"></div>
-    <button class="nav-btn" id="btn-next" onclick="changeRace(1)">次のレース ▶▶</button>
-  </div>
-  <div class="footer">
-    <div class="credit">
-      <span class="credit-pre">powered by</span>
-      <span class="credit-3">3</span><span class="credit-no1">NO1</span>
-      <span class="credit-sep">·</span>
-      <span class="credit-tone">TONE GROUP</span>
+    <div class="body">
+      <p class="thanks-text">
+        ご視聴いただきありがとうございました。<br>
+        今後の放送をより良くするため、<br>ぜひアンケートへのご協力をお願いします。
+      </p>
+      <div class="divider"></div>
+      <div class="survey-label">VIEWER SURVEY</div>
+      <p class="survey-desc">
+        回答は数分で完了します。<br>
+        皆さまのご意見をお聞かせください。
+      </p>
+      <a class="survey-btn" href="https://forms.gle/kgACkcgQ4Su7qRCi9" target="_blank" rel="noopener">
+        アンケートに答える →
+      </a>
     </div>
-    <div style="display:flex;align-items:center;gap:5px">
+    <div class="footer">
+      <div class="credit">
+        <span class="credit-pre">powered by</span>
+        <span class="credit-3">3</span><span class="credit-no1">NO1</span>
+        <span class="credit-sep">·</span>
+        <span class="credit-tone">TONE GROUP</span>
+      </div>
       <div class="dot"></div>
-      <span class="footer-text">LIVE</span>
     </div>
   </div>
 </div>
-
-<script>
-  const API_URL = "https://misty-paper-840c.v08054028713.workers.dev/";
-  const TOTAL_RACES = 5;
-  const UPDATE_INTERVAL = 5000;
-
-  let currentIndex = 0;
-  let cachedData = null;
-  let isLoading = false;
-
-  const navDots = document.getElementById("nav-dots");
-  for (let i = 0; i < TOTAL_RACES; i++) {
-    const d = document.createElement("div");
-    d.className = "nav-dot" + (i === 0 ? " active" : "");
-    d.id = "dot-" + i;
-    navDots.appendChild(d);
-  }
-
-  function showLoading() {
-    document.getElementById("display").innerHTML = `
-      <div class="loading-wrap">
-        <div class="loading-dots"><span></span><span></span><span></span></div>
-        <div class="loading-text">LOADING...</div>
-      </div>`;
-  }
-
-  function renderRace(data) {
-    const race = data[currentIndex];
-    if (!race) return;
-
-    let html = `
-      <div class="race-header">
-        <span style="font-size:16px">🚤</span>
-        <span class="race-title">${race.raceName}</span>
-        <span class="race-badge">ODDS</span>
-      </div>`;
-
-    if (!race.isPublic) {
-      html += `
-        <div class="private-wrap">
-          <div class="loading-dots"><span></span><span></span><span></span></div>
-          <div class="loading-text">集計中のため非公開</div>
-        </div>`;
-    } else {
-      html += `<div class="boats">`;
-      race.boats.forEach(boat => {
-        const payout = Number(boat.payout);
-        const payoutStr = payout > 0 ? '¥' + payout.toLocaleString() : '---';
-        html += `
-          <div class="boat-row">
-            <div class="color-band band-${boat.no}"></div>
-            <span class="boat-no">${boat.no}</span>
-            <span class="boat-name">${boat.name}</span>
-            <div class="stat-block">
-              <span class="stat-label">倍率</span>
-              <span class="stat-value odds-value">${boat.odds}</span>
-            </div>
-            <div class="divider"></div>
-            <div class="stat-block">
-              <span class="stat-label">払戻</span>
-              <span class="stat-value payout-value">${payoutStr}</span>
-            </div>
-          </div>`;
-      });
-      html += `</div>`;
-    }
-
-    document.getElementById("display").innerHTML = html;
-    updateNav();
-  }
-
-  function updateNav() {
-    document.getElementById("btn-prev").disabled = (currentIndex === 0);
-    document.getElementById("btn-next").disabled = (currentIndex === TOTAL_RACES - 1);
-    for (let i = 0; i < TOTAL_RACES; i++) {
-      const d = document.getElementById("dot-" + i);
-      if (d) d.className = "nav-dot" + (i === currentIndex ? " active" : "");
-    }
-  }
-
-  function changeRace(dir) {
-    const next = currentIndex + dir;
-    if (next < 0 || next >= TOTAL_RACES) return;
-    currentIndex = next;
-    if (cachedData) renderRace(cachedData);
-    updateNav();
-  }
-
-  async function updateDisplay() {
-    if (isLoading) return;
-    isLoading = true;
-    try {
-      const res = await fetch(API_URL, { method: "GET", redirect: "follow", cache: "no-store" });
-      if (!res.ok) throw new Error("HTTP " + res.status);
-      cachedData = await res.json();
-      renderRace(cachedData);
-    } catch (err) {
-      if (!cachedData) showLoading();
-    } finally {
-      isLoading = false;
-    }
-  }
-
-  updateDisplay();
-  setInterval(updateDisplay, UPDATE_INTERVAL);
-</script>
 </body>
 </html>
